@@ -254,7 +254,7 @@ class OpenSubtitles:
     def get_alternate_names(self, media_name):
         parsed = PTN.parse(media_name)
         if parsed:
-            return parsed['title'], {parsed['season']}, {parsed['episode']}
+            return parsed['title'], parsed['season'], parsed['episode']
         else:
             return None
 
