@@ -360,7 +360,7 @@ class OpenSubtitles:
                 f"Adding more results by searching for {title} {season} {episode}, found {len(temp_results)} results"
             )
         if not results:
-            print(f"No subtitles found for {media_name}, or {new_search_terms}")
+            print(f"No subtitles found for {media_name}, or {title} {season} {episode}")
             return False
 
         sorted_results = self.sort_list_of_dicts_by_key(results, "download_count")
