@@ -366,6 +366,7 @@ class OpenSubtitles:
         # )
         # print(f"Searcing for subtitles for {media_name}, found {len(results)} results")
         # # add more results, by searching with the new search term
+        results = {}
         new_search_terms = self.get_alternate_names(media_name)
         if new_search_terms:
             for term in new_search_terms:
