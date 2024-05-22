@@ -360,13 +360,12 @@ class OpenSubtitles:
         # hash = self.hashFile(media_path)
         if not media_name:
             media_name = path.stem
-        # subtitle_path = Path(path.parent, f"{path.stem}_{language_choice}.srt")
-        # results = self.search(
-        #     media_hash=hash, media_name=media_name, languages=language_choice
-        # )
-        # print(f"Searcing for subtitles for {media_name}, found {len(results)} results")
+        subtitle_path = Path(path.parent, f"{path.stem}_{language_choice}.srt")
+        results = self.search(
+            media_hash="hash", media_name=media_name, languages=language_choice
+        )
+        print(f"Searcing for subtitles for {media_name}, found {len(results)} results")
         # # add more results, by searching with the new search term
-        results = {}
         new_search_terms = self.get_alternate_names(media_name)
         if new_search_terms:
             for term in new_search_terms:
