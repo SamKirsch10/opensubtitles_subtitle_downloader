@@ -5,6 +5,7 @@ import requests
 import json
 import re
 from pathlib import Path
+import PTN
 import library.clean_subtitles as clean_subtitles
 import library.sync_subtitles as sync_subtitles
 import library.utils as utils
@@ -242,6 +243,9 @@ class OpenSubtitles:
         return None
 
     def get_alternate_names(self, media_name):
+        parsed = PTN.parse(media_name)
+        if parsed:
+            return f"{parsed['title']} season {parsed['season']} episode {parsed['episode']}"
         # Define a regular expression pattern to match the required information
         pattern = r"([^()]+)\s\((\d{4})\)\s-\sS(\d{2})E(\d{2})"
 
