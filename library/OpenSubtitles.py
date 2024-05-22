@@ -131,6 +131,9 @@ class OpenSubtitles:
         imdb_id="",
         media_name="",
         languages="en,ar",
+        title="",
+        episode="0",
+        season=""
     ):
         url = "https://api.opensubtitles.com/api/v1/subtitles"
         hearing_impaired = "include" if self.hearing_impaired else "exclude"
@@ -155,6 +158,12 @@ class OpenSubtitles:
 
         if media_name:
             params["query"] = media_name
+        if episode:
+            params["episode_number"] = episode
+        if season:
+            params["season_number"] = season
+        if title:
+            params["query"] = title
         # print(params)
         response = requests.get(url, headers=headers, params=params)
         try:
@@ -245,35 +254,7 @@ class OpenSubtitles:
     def get_alternate_names(self, media_name):
         parsed = PTN.parse(media_name)
         if parsed:
-            return f"{parsed['title']} season {parsed['season']} episode {parsed['episode']}"
-        # Define a regular expression pattern to match the required information
-        pattern = r"([^()]+)\s\((\d{4})\)\s-\sS(\d{2})E(\d{2})"
-
-        # Use regex to search for the pattern in the input string
-        match = re.search(pattern, media_name)
-
-        if match:
-            # Extract the relevant groups from the match
-            title = match.group(1)
-            year = match.group(2)
-            season = match.group(3)
-            episode = match.group(4)
-
-            # Format the extracted information
-            formatted_info_1 = f"{title} {season}x{episode}"
-            formatted_info_2 = f"{title} S{season.zfill(2)}E{episode.zfill(2)}"
-            formatted_info_3 = f"{title} Episode #{season}.{episode}"
-            # add format, the-uncanny-counter-episode-2-1
-            formatted_info_4 = f"{title.replace(' ', '-').lower()}-episode-{int(season)}-{int(episode)}"
-
-            result = [
-                formatted_info_1,
-                formatted_info_2,
-                formatted_info_3,
-                formatted_info_4,
-            ]
-
-            return result
+            return parsed['title'], {parsed['season']}, {parsed['episode']}
         else:
             return None
 
@@ -366,17 +347,18 @@ class OpenSubtitles:
         )
         print(f"Searcing for subtitles for {media_name}, found {len(results)} results")
         # # add more results, by searching with the new search term
-        new_search_terms = self.get_alternate_names(media_name)
-        if new_search_terms:
-            temp_results = self.search(
-                media_name=new_search_terms,
-                languages=language_choice,
+        title, season, episode = self.get_alternate_names(media_name)
+        temp_results = self.search(
+            title=title,
+            season=season,
+            episode=episode,
+            languages=language_choice,
+        )
+        if temp_results:
+            results.extend(temp_results)
+            print(
+                f"Adding more results by searching for {new_search_terms}, found {len(temp_results)} results"
             )
-            if temp_results:
-                results.extend(temp_results)
-                print(
-                    f"Adding more results by searching for {new_search_terms}, found {len(temp_results)} results"
-                )
         if not results:
             print(f"No subtitles found for {media_name}, or {new_search_terms}")
             return False
