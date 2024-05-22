@@ -356,10 +356,10 @@ class OpenSubtitles:
             f.write(response.content)
 
     def download_single_subtitle(self, media_path, language_choice, media_name=""):
-        # path = Path(media_path)
+        path = Path(media_path)
         # hash = self.hashFile(media_path)
-        # if not media_name:
-        #     media_name = path.stem
+        if not media_name:
+            media_name = path.stem
         # subtitle_path = Path(path.parent, f"{path.stem}_{language_choice}.srt")
         # results = self.search(
         #     media_hash=hash, media_name=media_name, languages=language_choice
